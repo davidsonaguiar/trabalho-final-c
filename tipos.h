@@ -18,7 +18,7 @@ typedef struct {
 
 typedef struct {
     char matricula[10];
-    char CPF[13];
+    char cpf[13];
     char nome[100];
     Endereco endereco;
 } Professor;
