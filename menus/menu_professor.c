@@ -27,23 +27,23 @@ void menuProfessor() {
 
         switch (opcao) {
             case 1:
-                printf("em desenvolvimento");
+                cadastrarProfessor();
                 break;
             
             case 2:
-                printf("em desenvolvimento");
+                imprimirProfessores();
                 break;
             
             case 3:
-                printf("em desenvolvimento");
+                imprimirProfessoresSemTurma();
                 break;
             
             case 4:
-                printf("em desenvolvimento");
+                atualizarProfessor();
                 break;
             
             case 5:
-                printf("em desenvolvimento");
+                descadastrarProfessor();
                 break;
             
             case 0:
