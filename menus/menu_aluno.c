@@ -23,19 +23,19 @@ void menuAluno() {
 
         switch (opcao) {
             case 1:
-                printf("em desenvolvimento");
+                cadastrarAluno();
                 break;
             
             case 2:
-                printf("em desenvolvimento");
+                imprimirAlunos;
                 break;
             
             case 3:
-                printf("em desenvolvimento");
+                atualizarAluno();
                 break;
             
             case 4:
-                printf("em desenvolvimento");
+                descadastrarAluno();
                 break;
             
             case 0:
