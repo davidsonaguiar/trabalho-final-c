@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "./professor.h"
+#include "./professor.h" // Importando o cabeçalho do professor, com sua fuções, tipos e constantes. 
 
 
 void cadastrarProfessor() {
@@ -9,15 +9,21 @@ void cadastrarProfessor() {
     FILE* arquivo;
 
     printf("--- CADASTRO DE PROFESSOR ---\n");
+
+    // recebebendo a matricula.
     printf("Matrícula: ");
     scanf("%s", professor.matricula);
+
+    // recebendo o cpf.
+    printf("CPF: ");
+    scanf("%s", professor.cpf);
 
     // Verifica se o professor já está cadastrado
     arquivo = fopen("dados/professor/professores.bin", "rb");
     if (arquivo != NULL) {
         Professor professorExistente;
         while (fread(&professorExistente, sizeof(Professor), 1, arquivo)) {
-            if (strcmp(professorExistente.matricula, professor.matricula) == 0) {
+            if (strcmp(professorExistente.matricula, professor.matricula) == 0 || strcmp(professorExistente.cpf, professor.cpf) == 0) {
                 printf("Professor já cadastrado!\n");
                 fclose(arquivo);
                 return;
@@ -26,8 +32,7 @@ void cadastrarProfessor() {
         fclose(arquivo);
     }
 
-    printf("CPF: ");
-    scanf("%s", professor.cpf);
+    
     printf("Nome: ");
     scanf(" %[^\n]", professor.nome);
     printf("Endereço:\n");
