@@ -27,7 +27,7 @@ void menuAluno() {
                 break;
             
             case 2:
-                imprimirAlunos;
+                imprimirAlunos();
                 break;
             
             case 3:
