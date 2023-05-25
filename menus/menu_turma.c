@@ -23,19 +23,19 @@ void menuTurma() {
 
         switch (opcao) {
             case 1:
-                printf("em desenvolvimento");
+                cadastrarTurma();
                 break;
             
             case 2:
-                printf("em desenvolvimento");
+                imprimirTurmas();
                 break;
             
             case 3:
-                printf("em desenvolvimento");
+                atualizarProfessor();
                 break;
             
             case 4:
-                printf("em desenvolvimento");
+                descadastrarTurma();
                 break;
             
             case 0:
