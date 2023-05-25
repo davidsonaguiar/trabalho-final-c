@@ -29,7 +29,7 @@ void cadastrarAluno() {
             // CPF e Matricula informados sao comparados com cada aluno ja cadastrado no sistema
             if (strcmp(alunoExistente.matricula, aluno.matricula) == 0 || strcmp(alunoExistente.cpf, aluno.cpf) == 0) {
                 // Se o CPF ou Matricula informado constar cadastrado retorna a msg abaixo
-                printf("Aluno já cadastraarquivodo!\n");
+                printf("Aluno já cadastrado no sistema!\n");
                 // O arquivo e fechado
                 fclose(arquivo);
                 // A funcao sera parada return vazio
