@@ -73,7 +73,7 @@ void imprimirProfessores() {
     }
 
     if(fread(&professor, sizeof(Professor), 1, arquivo) == 0) {
-        printf("Não há alunos cadastrados!\n");
+        printf("Não há professorres cadastrados!\n");
     } else {
         while (fread(&professor, sizeof(Professor), 1, arquivo)) {
             printf("Matrícula: %s\n", professor.matricula); 
