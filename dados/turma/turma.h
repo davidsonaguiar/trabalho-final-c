@@ -9,5 +9,8 @@ void imprimirTurmas();
 void atualizarTurma();
 void descadastrarTurma();
 void calcularMediaTurmas();
+void adicionarAluno();
+void imprimirMedia();
+
 
 #endif
