@@ -90,17 +90,21 @@ void imprimirAlunos() {
     // Loop para ler cada aluno salvo em alunos.bin
     // a cada loop e consultado um bloco do tamanho de Aluno
     // e salvo em &aluno
-    while (fread(&aluno, sizeof(Aluno), 1, arquivo)) {
-        printf("Matrícula: %s\n", aluno.matricula); 
-        printf("CPF: %s\n", aluno.cpf); 
-        printf("Nome: %s\n", aluno.nome);
-        printf("Endereço:\n");
-        printf("Logradouro: %s\n", aluno.endereco.logradouro);
-        printf("Bairro: %s\n", aluno.endereco.bairro);
-        printf("Cidade: %s\n", aluno.endereco.cidade);
-        printf("Estado: %s\n", aluno.endereco.estado);
-        printf("Número: %s\n", aluno.endereco.numero);
-        printf("------------\n");
+    if(fread(&aluno, sizeof(Aluno), 1, arquivo) == 0) {
+        printf("Não há alunos cadastrados!\n");
+    } else {
+        while (fread(&aluno, sizeof(Aluno), 1, arquivo)) {
+            printf("Matrícula: %s\n", aluno.matricula); 
+            printf("CPF: %s\n", aluno.cpf); 
+            printf("Nome: %s\n", aluno.nome);
+            printf("Endereço:\n");
+            printf("Logradouro: %s\n", aluno.endereco.logradouro);
+            printf("Bairro: %s\n", aluno.endereco.bairro);
+            printf("Cidade: %s\n", aluno.endereco.cidade);
+            printf("Estado: %s\n", aluno.endereco.estado);
+            printf("Número: %s\n", aluno.endereco.numero);
+            printf("------------\n");
+        }
     }
 
     // Fechamento do arquivo
