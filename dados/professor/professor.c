@@ -67,23 +67,27 @@ void imprimirProfessores() {
 
     printf("--- PROFESSORES CADASTRADOS ---\n");
 
-    if (arquivo == NULL) {
+    if (arquivo == NULL) {    
         printf("Não há professores cadastrados!\n");
         return;
     }
 
-    while (fread(&professor, sizeof(Professor), 1, arquivo)) {
-        printf("Matrícula: %s\n", professor.matricula);
-        printf("CPF: %s\n", professor.cpf);
-        printf("Nome: %s\n", professor.nome);
-        printf("Endereço:\n");
-        printf("Logradouro: %s\n", professor.endereco.logradouro);
-        printf("Bairro: %s\n", professor.endereco.bairro);
-        printf("Cidade: %s\n", professor.endereco.cidade);
-        printf("Estado: %s\n", professor.endereco.estado);
-        printf("Número: %s\n", professor.endereco.numero);
-        printf("------------\n");
-    }
+    if(fread(&professor, sizeof(Professor), 1, arquivo) == 0) {
+        printf("Não há professors cadastrados!\n");
+    } else {
+        while (fread(&professor, sizeof(Professor), 1, arquivo)) {
+            printf("Matrícula: %s\n", professor.matricula); 
+            printf("CPF: %s\n", professor.cpf); 
+            printf("Nome: %s\n", professor.nome);
+            printf("Endereço:\n");
+            printf("Logradouro: %s\n", professor.endereco.logradouro);
+            printf("Bairro: %s\n", professor.endereco.bairro);
+            printf("Cidade: %s\n", professor.endereco.cidade);
+            printf("Estado: %s\n", professor.endereco.estado);
+            printf("Número: %s\n", professor.endereco.numero);
+            printf("------------\n");
+        }
+    }
 
     fclose(arquivo);
 }
