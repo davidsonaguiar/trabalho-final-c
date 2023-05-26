@@ -67,22 +67,26 @@ void imprimirProfessores() {
 
     printf("--- PROFESSORES CADASTRADOS ---\n");
 
-    if (arquivo == NULL) {
+    if (arquivo == NULL) {    
         printf("Não há professores cadastrados!\n");
         return;
     }
 
-    while (fread(&professor, sizeof(Professor), 1, arquivo)) {
-        printf("Matrícula: %s\n", professor.matricula);
-        printf("CPF: %s\n", professor.cpf);
-        printf("Nome: %s\n", professor.nome);
-        printf("Endereço:\n");
-        printf("Logradouro: %s\n", professor.endereco.logradouro);
-        printf("Bairro: %s\n", professor.endereco.bairro);
-        printf("Cidade: %s\n", professor.endereco.cidade);
-        printf("Estado: %s\n", professor.endereco.estado);
-        printf("Número: %s\n", professor.endereco.numero);
-        printf("------------\n");
+    if(fread(&professor, sizeof(Professor), 1, arquivo) == 0) {
+        printf("Não há alunos cadastrados!\n");
+    } else {
+        while (fread(&professor, sizeof(Professor), 1, arquivo)) {
+            printf("Matrícula: %s\n", professor.matricula); 
+            printf("CPF: %s\n", professor.cpf); 
+            printf("Nome: %s\n", professor.nome);
+            printf("Endereço:\n");
+            printf("Logradouro: %s\n", professor.endereco.logradouro);
+            printf("Bairro: %s\n", professor.endereco.bairro);
+            printf("Cidade: %s\n", professor.endereco.cidade);
+            printf("Estado: %s\n", professor.endereco.estado);
+            printf("Número: %s\n", professor.endereco.numero);
+            printf("------------\n");
+        }
     }
 
     fclose(arquivo);
@@ -203,13 +207,15 @@ void descadastrarProfessor() {
 
 
 void imprimirProfessoresSemTurma() {
+
     FILE* arquivoTurmas = fopen("dados/turma/turmas.bin", "rb");
+    FILE* arquivoProfessores = fopen("dados/professor/professores.bin", "rb");
+
     if (arquivoTurmas == NULL) {
         printf("Não há turmas cadastradas!\n");
         return;
     }
 
-    FILE* arquivoProfessores = fopen("dados/professor/professores.bin", "rb");
     if (arquivoProfessores == NULL) {
         printf("Não há professores cadastrados!\n");
         fclose(arquivoTurmas);
@@ -218,23 +224,25 @@ void imprimirProfessoresSemTurma() {
 
     Turma turma;
     Professor professor;
-    int professorEncontrado;
+    int professorAssociado;
 
     printf("--- PROFESSORES SEM TURMA ---\n");
 
-    while (fread(&turma, sizeof(Turma), 1, arquivoTurmas)) {
-        fseek(arquivoProfessores, 0, SEEK_SET);
-        professorEncontrado = 0;
+    while (fread(&professor, sizeof(Professor), 1, arquivoProfessores)) {
+        fseek(arquivoTurmas, 0, SEEK_SET);
+        professorAssociado = 0;
 
-        while (fread(&professor, sizeof(Professor), 1, arquivoProfessores)) {
+        while (fread(&turma, sizeof(Turma), 1, arquivoTurmas)) {
             if (strcmp(professor.matricula, turma.professor.matricula) == 0) {
-                professorEncontrado = 1;
+                professorAssociado = 1;
                 break;
             }
         }
 
-        if (!professorEncontrado) {
-            printf("Matrícula: %s\n", turma.professor.matricula);
+        if (!professorAssociado) {
+            printf("Matrícula: %s\n", professor.matricula);
+            printf("Matrícula: %s\n", professor.nome);
+            printf("Matrícula: %s\n", professor.cpf);
         }
     }
 

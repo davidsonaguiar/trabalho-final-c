@@ -17,11 +17,12 @@ void menuProfessor() {
         printf("5 - Remover Professor\n");
         printf("0 - Menu Principal\n\n");
 
-        printf("Escolha uma das opcoes acima: ");
-
+        printf("Escolha uma das opcoes acima:");
+        scanf("%d", &opcao);
+        
         printf("\n");
 
-        scanf("%d", &opcao);
+        
 
         printf("\n");
 
