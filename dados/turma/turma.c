@@ -100,30 +100,34 @@ void imprimirTurmas() {
         return;
     }
 
-    while (fread(&turma, sizeof(Turma), 1, arquivo)) {
-        printf("=================================================\n");
-        printf(" %s - %s   Media: %.2f\n", turma.nome, turma.codigo, turma.media);
-        printf("=================================================\n");
-        printf("-------------------------------------------------\n");
-        printf("Professor:\n");
-        printf("-------------------------------------------------\n");
-        printf("   Matrícula: %s\n", turma.professor.matricula);
-        printf("   CPF: %s\n", turma.professor.cpf);
-        printf("   Nome: %s\n", turma.professor.nome);
-        printf("-------------------------------------------------\n");
-        printf("Alunos (%d):\n", turma.numAlunos);
-        printf("-------------------------------------------------\n");
-        for (int i = 0; i < turma.numAlunos; i++) {
-            printf("   Matrícula: %s\n", turma.alunos[i].matricula);
-            printf("   CPF: %s\n", turma.alunos[i].cpf);
-            printf("   Nome: %s\n", turma.alunos[i].nome);
-            printf("   ----------------------------------------------\n");
+    if(fread(&turma, sizeof(Turma), 1, arquivo) == 0) {
+        printf("Não há turmas cadastradas!\n");
+    } else {
+        while (fread(&turma, sizeof(Turma), 1, arquivo)) {
+            printf("=================================================\n");
+            printf(" %s - %s   Media: %.2f\n", turma.nome, turma.codigo, turma.media);
+            printf("=================================================\n");
+            printf("-------------------------------------------------\n");
+            printf("Professor:\n");
+            printf("-------------------------------------------------\n");
+            printf("   Matrícula: %s\n", turma.professor.matricula);
+            printf("   CPF: %s\n", turma.professor.cpf);
+            printf("   Nome: %s\n", turma.professor.nome);
+            printf("-------------------------------------------------\n");
+            printf("Alunos (%d):\n", turma.numAlunos);
+            printf("-------------------------------------------------\n");
+            for (int i = 0; i < turma.numAlunos; i++) {
+                printf("   Matrícula: %s\n", turma.alunos[i].matricula);
+                printf("   CPF: %s\n", turma.alunos[i].cpf);
+                printf("   Nome: %s\n", turma.alunos[i].nome);
+                printf("   ----------------------------------------------\n");
 
+            }
+            printf("-------------------------------------------------\n");
+            printf("Média: %.2f\n", turma.media);
+            printf("-------------------------------------------------\n");
+            printf("\n");
         }
-        printf("-------------------------------------------------\n");
-        printf("Média: %.2f\n", turma.media);
-        printf("-------------------------------------------------\n");
-        printf("\n");
     }
 
     fclose(arquivo);
