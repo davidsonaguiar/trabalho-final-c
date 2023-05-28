@@ -483,3 +483,59 @@ void imprimirMedia() {
 
     fclose(arquivoTurma);
 }
+
+void descadastrarAlunoTurma() {
+    FILE* arquivoTurmas = fopen("dados/turma/turmas.bin", "rb+");
+    FILE* arquivoAlunos = fopen("dados/aluno/alunos.bin", "rb+");
+
+    if (arquivoTurmas == NULL || arquivoAlunos == NULL) {
+        printf("Erro ao abrir os arquivos de turmas ou alunos!\n");
+        return;
+    }
+
+    char matriculaAluno[10];
+    printf("Digite a matrícula do aluno a ser descadastrado: ");
+    scanf("%s", matriculaAluno);
+
+    Aluno aluno;
+    Turma turma;
+    int encontrado = 0;
+
+    while (fread(&turma, sizeof(Turma), 1, arquivoTurmas)) {
+        // Verifica se o aluno está presente na turma
+        for (int i = 0; i < 40; i++) {
+            if (strcmp(turma.alunos[i].matricula, matriculaAluno) == 0) {
+                encontrado = 1;
+                // Remove o aluno da turma movendo os alunos subsequentes para frente
+                for (int j = i; j < 39; j++) {
+                    strcpy(turma.alunos[j].matricula, turma.alunos[j + 1].matricula);
+                    strcpy(turma.alunos[j].cpf, turma.alunos[j + 1].cpf);
+                    strcpy(turma.alunos[j].nome, turma.alunos[j + 1].nome);
+                    turma.alunos[j].endereco = turma.alunos[j + 1].endereco;
+                }
+                // Limpa os dados do último aluno no array
+                strcpy(turma.alunos[39].matricula, "");
+                strcpy(turma.alunos[39].cpf, "");
+                strcpy(turma.alunos[39].nome, "");
+                turma.alunos[39].endereco = (Endereco){ "", "", "", "", "" };
+                break;
+            }
+        }
+
+        // Se o aluno foi encontrado e removido da turma, atualiza a turma no arquivo
+        if (encontrado) {
+            long posicao = ftell(arquivoTurmas) - sizeof(Turma);
+            fseek(arquivoTurmas, posicao, SEEK_SET);
+            fwrite(&turma, sizeof(Turma), 1, arquivoTurmas);
+            printf("Aluno descadastrado da turma com sucesso!\n");
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        printf("Aluno não encontrado na turma!\n");
+    }
+
+    fclose(arquivoTurmas);
+    fclose(arquivoAlunos);
+}

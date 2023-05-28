@@ -4,5 +4,6 @@
 #define MAX_ALUNO 100
 #define MAX_PROFESSORES 50
 #define MAX_TURMAS 30
+#define MAX_ALUNO_CADASTRADO 40
 
 #endif
