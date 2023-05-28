@@ -228,7 +228,7 @@ void imprimirProfessoresSemTurma() {
     Professor professor;
     int professorAssociado;
 
-    printf("--- PROFESSORES SEM TURMA ---\n");
+    printf("--- PROFESSORES SEM TURMA ---\n\n");
 
     while (fread(&professor, sizeof(Professor), 1, arquivoProfessores)) {
         fseek(arquivoTurmas, 0, SEEK_SET);
@@ -243,8 +243,9 @@ void imprimirProfessoresSemTurma() {
 
         if (!professorAssociado) {
             printf("Matrícula: %s\n", professor.matricula);
-            printf("Matrícula: %s\n", professor.nome);
-            printf("Matrícula: %s\n", professor.cpf);
+            printf("Nome: %s\n", professor.nome);
+            printf("CPF: %s\n", professor.cpf);
+            printf("-------------------------------\n");
         }
     }
 
