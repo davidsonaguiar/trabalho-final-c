@@ -3,7 +3,7 @@
 #include <string.h>
 #include "./professor.h" // Importando o cabeçalho do professor, com sua fuções, tipos e constantes. 
 
-
+//sistema de cadastro e gerenciamento de informações de professores
 void cadastrarProfessor() {
     Professor professor;
     FILE* arquivo;
@@ -18,44 +18,58 @@ void cadastrarProfessor() {
     printf("CPF: ");
     scanf("%s", professor.cpf);
 
+    // O arquivo dados/professor/professor.bin e aberto para verificar se o condigo ja esta cadastrado
     // Verifica se o professor já está cadastrado
     arquivo = fopen("dados/professor/professores.bin", "rb");
     if (arquivo != NULL) {
+        // Loop para percorrer os professores cadastrados
+        // Verifica se o codigo ja esta cadastrado   
         Professor professorExistente;
         while (fread(&professorExistente, sizeof(Professor), 1, arquivo)) {
+            // Se o codigo do professor cadastrada for igual ao codigo informado
+            // O sistema retorna a msg Turma ja cadastrada
             if (strcmp(professorExistente.matricula, professor.matricula) == 0 || strcmp(professorExistente.cpf, professor.cpf) == 0) {
                 printf("Professor já cadastrado!\n");
+                //frchando arquivo e função encerra
                 fclose(arquivo);
                 return;
             }
         }
+        // caso o codigo não seja localizado o arquivo é fechado
         fclose(arquivo);
     }
 
-    
+    // menu para inserir informações do professor.
+    // inserir nome do professor pelo o usuario.
     printf("Nome: ");
     scanf(" %[^\n]", professor.nome);
+    //inserir endereço/logradouro
     printf("Endereço:\n");
     printf("Logradouro: ");
     scanf(" %[^\n]", professor.endereco.logradouro);
+    //inserir bairro
     printf("Bairro: ");
     scanf(" %[^\n]", professor.endereco.bairro);
+    //inseirir cidade.
     printf("Cidade: ");
     scanf(" %[^\n]", professor.endereco.cidade);
+    //inseiri estado.
     printf("Estado: ");
     scanf(" %[^\n]", professor.endereco.estado);
+    //inserir numero.
     printf("Número: ");
     scanf(" %[^\n]", professor.endereco.numero);
-
+    //abrir arquivo de professor, para adicionar um novo.
     arquivo = fopen("dados/professor/professores.bin", "ab");
+    // se não abrir apresentar a mensagem abaixo.
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo!\n");
         return;
     }
-
+    // adicionando professor ao arquivo de professores.bin
     fwrite(&professor, sizeof(Professor), 1, arquivo);
     fclose(arquivo);
-
+     // mensagem para informar que o professor foi cadastrado com sucesso
     printf("Professor cadastrado com sucesso!\n");
 }
 
