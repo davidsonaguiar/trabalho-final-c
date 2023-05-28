@@ -103,6 +103,8 @@ void imprimirTurmas() {
     if(fread(&turma, sizeof(Turma), 1, arquivo) == 0) {
         printf("Não há turmas cadastradas!\n");
     } else {
+        fseek(arquivo, 0, SEEK_SET);
+
         while (fread(&turma, sizeof(Turma), 1, arquivo)) {
             printf("=================================================\n");
             printf(" %s - %s   Media: %.2f\n", turma.nome, turma.codigo, turma.media);
@@ -146,6 +148,7 @@ void atualizarTurma() {
     scanf("%s", codigo);
 
     arquivo = fopen("dados/turma/turmas.bin", "r+b");
+
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo!\n");
         return;
@@ -153,6 +156,7 @@ void atualizarTurma() {
 
     while (fread(&turma, sizeof(Turma), 1, arquivo)) {
         if (strcmp(turma.codigo, codigo) == 0) {
+
             posicao = ftell(arquivo) - sizeof(Turma);
             fseek(arquivo, posicao, SEEK_SET);
 
@@ -165,6 +169,7 @@ void atualizarTurma() {
 
             // Verifica se o professor está cadastrado
             FILE* arquivoProfessores = fopen("dados/professor/professores.bin", "rb");
+
             if (arquivoProfessores != NULL) {
                 int professorEncontrado = 0;
                 Professor professor;
@@ -185,6 +190,9 @@ void atualizarTurma() {
                 printf("Não há professores cadastrados!\n");
                 return;
             }
+
+            printf("Media da Turma: ");
+            scanf("%f", &turma.media);
 
             fwrite(&turma, sizeof(Turma), 1, arquivo);
             fclose(arquivo);
