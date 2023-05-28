@@ -74,18 +74,23 @@ void cadastrarProfessor() {
 }
 
 
-
+//sistema para imprimir professores cadastrado.
 void imprimirProfessores() {
     Professor professor;
+    //abrir arquivo de professores
     FILE* arquivo = fopen("dados/professor/professores.bin", "rb");
-
+     //menu do professores cadastrados.
     printf("--- PROFESSORES CADASTRADOS ---\n");
-
+//se não ouver professores cadastrado no arquivo .bin, apresentar a mensagem. 
     if (arquivo == NULL) {    
         printf("Não há professores cadastrados!\n");
         return;
     }
-
+//loop para verificar se a professores cadastrados.
+//verifica se há pelo menos um registro de professor no arquivo usando.
+//Se o resultado dessa chamada for zero, significa que não há professores cadastrados e imprimi a mensagem.
+//se ouver professores entrar no loop e imprimir as informações.
+//se ouver professores entrar no loop e imprimir as informações
     if(fread(&professor, sizeof(Professor), 1, arquivo) == 0) {
         printf("Não há professorres cadastrados!\n");
     } else {
@@ -104,33 +109,39 @@ void imprimirProfessores() {
             printf("------------\n");
         }
     }
-
+//fehcamento de arquivo.
     fclose(arquivo);
 }
 
 
-
+//sistema de atualização de professores
 void atualizarProfessor() {
     char matricula[10];
     Professor professor;
     FILE* arquivo;
     long int posicao;
-
+ //menu.
     printf("--- ATUALIZAÇÃO DE PROFESSOR ---\n");
+    //input para verificação de matricula do professor
     printf("Matrícula do professor a ser atualizado: ");
     scanf("%s", matricula);
-
+ //abertura do arquivo professor.bin, para leitura de dados.
     arquivo = fopen("dados/professor/professores.bin", "r+b");
+    //condição para caso não abra o arquivo.
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo!\n");
         return;
     }
-
+ //loop para ler professores salvos no arquivo bin.
+    //a cada loop é verificado um bloco do tamnho de professores e salvo em %professor.
     while (fread(&professor, sizeof(Professor), 1, arquivo)) {
+         //comparar se já existe a matricula informada.
         if (strcmp(professor.matricula, matricula) == 0) {
+            //verificando a posição do ponteiro do aluno com a matricula.
             posicao = ftell(arquivo) - sizeof(Professor);
+            //movendo o local de escrita no arquivo para a posição acima.
             fseek(arquivo, posicao, SEEK_SET);
-
+ //solicitando dados ao usuario.
             printf("CPF: ");
             scanf("%s", professor.cpf);
             printf("Nome: ");
@@ -146,16 +157,18 @@ void atualizarProfessor() {
             scanf(" %[^\n]", professor.endereco.estado);
             printf("Número: ");
             scanf(" %[^\n]", professor.endereco.numero);
-
+ //salvar dados informado.
             fwrite(&professor, sizeof(Professor), 1, arquivo);
+            //fechando arquivo
             fclose(arquivo);
-
+ //mensagem de sucesso.
             printf("Professor atualizado com sucesso!\n");
             return;
         }
     }
-
+//fechar arquivo.
     fclose(arquivo);
+     //caso a matricula do professor informado não seja encotrado, exibir.
     printf("Professor não encontrado!\n");
 }
 
