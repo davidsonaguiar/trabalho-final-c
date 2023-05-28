@@ -173,58 +173,73 @@ void atualizarProfessor() {
 }
 
 
-
+//sistema de remover professores.
 void descadastrarProfessor() {
+    //declaração de varivel para solicitação de numero da matricula.
     char matricula[10];
     Professor professor;
     FILE* arquivo;
     FILE* arquivoTurmas;
     int professorEncontrado = 0;
-
+//solicitando a matricula do professor que sera descadastrado
     printf("--- DESCADASTRAR PROFESSOR ---\n");
     printf("Matrícula do professor a ser descadastrado: ");
     scanf("%s", matricula);
 
     // Verifica se o professor está associado a alguma turma
     arquivoTurmas = fopen("dados/turma/turmas.bin", "rb");
+    //abertura do arquivo .bin da turma para verificar se o professor está cadastrado em alguma turma.
     if (arquivoTurmas != NULL) {
+        // Verifica se conseguiu abrir o arquivo da turma.
         Turma turma;
+        // loop para consultar turmas se existe professor associado a turma.
         while (fread(&turma, sizeof(Turma), 1, arquivoTurmas)) {
+             //verificar se a matricula informada é igual a do professor cadastrado.
             if (strcmp(turma.professor.matricula, matricula) == 0) {
+                //caso atenda a condição anterior imprimir.
                 printf("O professor está associado à turma %s. Não é possível descadastrá-lo!\n", turma.codigo);
+                //arquivo é fechado e a função encerrada.
                 fclose(arquivoTurmas);
                 return;
             }
         }
         fclose(arquivoTurmas);
     }
-
+//se a verificação acima for falsa.
+//abrir arquivo professores.bin e realizar leitura.
     arquivo = fopen("dados/professor/professores.bin", "r+b");
     if (arquivo == NULL) {
+        //caso não consiga abrir apresentar mensagem.
         printf("Erro ao abrir o arquivo!\n");
         return;
     }
 
     FILE* arquivoTemporario = fopen("dados/professor/professores_temp.bin", "w+b");
     if (arquivoTemporario == NULL) {
+        //caso não consiga abrir apresentar mensagem.
         printf("Erro ao abrir o arquivo temporário!\n");
         fclose(arquivo);
         return;
     }
-
+//loop para verificar professores.
     while (fread(&professor, sizeof(Professor), 1, arquivo)) {
+        //verificar se a matricula informada é igual a matricula inserida.
         if (strcmp(professor.matricula, matricula) == 0) {
+             //se a condição for verdadeira, então o professor já é cadastrado.
             professorEncontrado = 1;
+            //se não o professor é escrito no arquivo temporario.
         } else {
             fwrite(&professor, sizeof(Professor), 1, arquivoTemporario);
         }
     }
-
+ //fechando arquivo professores.bin e temp.bin
     fclose(arquivo);
     fclose(arquivoTemporario);
-
+//caso o professor seja encontrado.
     if (professorEncontrado) {
+         //removido o professor do professores.bin
         remove("dados/professor/professores.bin");
+        //professores.bin é renomeado pra professores_temp.bin
         rename("dados/professor/professores_temp.bin", "dados/professor/professores.bin");
         printf("Professor descadastrado com sucesso!\n");
     } else {
@@ -234,40 +249,42 @@ void descadastrarProfessor() {
 }
 
 
-
+//sistema de impressão de professores sem turma.
 void imprimirProfessoresSemTurma() {
-
+ //abrir arquivos de turma.bin e professores.bin
+    //declarando os seus ponteiros.
     FILE* arquivoTurmas = fopen("dados/turma/turmas.bin", "rb");
     FILE* arquivoProfessores = fopen("dados/professor/professores.bin", "rb");
-
+//verificando se o arquivo turmas.bin é aberto.
+//imprimindo mensagem caso não.
     if (arquivoTurmas == NULL) {
         printf("Não há turmas cadastradas!\n");
         return;
     }
-
+//verificando se o arquivo professores pode abrir.
     if (arquivoProfessores == NULL) {
         printf("Não há professores cadastrados!\n");
         fclose(arquivoTurmas);
         return;
     }
-
+//declarando as variveis.
     Turma turma;
     Professor professor;
     int professorAssociado;
 
     printf("--- PROFESSORES SEM TURMA ---\n\n");
-
+//loop para verificar para verificar se o professor está associado a alguma turma.
     while (fread(&professor, sizeof(Professor), 1, arquivoProfessores)) {
         fseek(arquivoTurmas, 0, SEEK_SET);
         professorAssociado = 0;
-
+//loop para ler registro de turma do arquivo de turma.comparando a matricula do professor.
         while (fread(&turma, sizeof(Turma), 1, arquivoTurmas)) {
             if (strcmp(professor.matricula, turma.professor.matricula) == 0) {
                 professorAssociado = 1;
                 break;
             }
         }
-
+//condição para verificar se não está associado. imprimindo informações.
         if (!professorAssociado) {
             printf("Matrícula: %s\n", professor.matricula);
             printf("Nome: %s\n", professor.nome);
@@ -275,7 +292,7 @@ void imprimirProfessoresSemTurma() {
             printf("-------------------------------\n");
         }
     }
-
+//fechando arquivo.
     fclose(arquivoTurmas);
     fclose(arquivoProfessores);
 }
