@@ -109,23 +109,30 @@ void cadastrarTurma() {
 
 
 
-
+// Funcao para imprimir todos as turmas cadastradas no arquivo turmas.bin
 void imprimirTurmas() {
     Turma turma;
+
+    // Abrindo o arquivo turmas.bin
     FILE* arquivo = fopen("dados/turma/turmas.bin", "rb");
 
     printf("--- TURMAS CADASTRADAS ---\n");
 
+    // Caso nao consiga abrir o arquivo a msg abaixo sera impressa
     if (arquivo == NULL) {
         printf("Não há turmas cadastradas!\n");
         return;
     }
 
+    // Verifica se a alguma turma cadastrada
     if(fread(&turma, sizeof(Turma), 1, arquivo) == 0) {
+        // Caso nao tenha turma cadastrada print a msg abaixo
         printf("Não há turmas cadastradas!\n");
     } else {
+        // Retorna o ponteiro para o inicio do arquivo
         fseek(arquivo, 0, SEEK_SET);
 
+        // Loop para percorrer cada turma salva no arquivo turmas.bin
         while (fread(&turma, sizeof(Turma), 1, arquivo)) {
             printf("=================================================\n");
             printf(" %s - %s   Media: %.2f\n", turma.nome, turma.codigo, turma.media);
@@ -152,12 +159,12 @@ void imprimirTurmas() {
             printf("\n");
         }
     }
-
+    // Fechamento do arquivo
     fclose(arquivo);
 }
 
 
-
+// Funcao para atualizar as turmas 
 void atualizarTurma() {
     char codigo[10];
     Turma turma;
@@ -165,65 +172,88 @@ void atualizarTurma() {
     long int posicao;
 
     printf("--- ATUALIZAÇÃO DE TURMA ---\n");
+
+    // Input para usuario informa o codigo da turma que deseja alterar
     printf("Código da turma a ser atualizada: ");
     scanf("%s", codigo);
 
+    // Abertura do arquivo turmas.bin
     arquivo = fopen("dados/turma/turmas.bin", "r+b");
-
+    // Caso nao consigo abrir printa a msg abaixo
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo!\n");
+        // funcao retorna vazio
         return;
     }
 
+    // Loop para ler cada turma no arquivo turmas.bin
     while (fread(&turma, sizeof(Turma), 1, arquivo)) {
+        // Caso o codigo da turma lida e o codigo digitado pelo usuario sejam iguais
         if (strcmp(turma.codigo, codigo) == 0) {
-
+            // Obter a posicao do ultimo registro lido e salvar na variavel posicao
             posicao = ftell(arquivo) - sizeof(Turma);
+            // Posiciona o ponteiro para do ultimo registro lido
             fseek(arquivo, posicao, SEEK_SET);
 
+            // Solicita o nome da turma
             printf("Nome: ");
             scanf(" %[^\n]", turma.nome);
-
+            
+            // Solicita o nome do professor
             printf("Professor:\n");
             printf("Matrícula: ");
             scanf("%s", turma.professor.matricula);
 
-            // Verifica se o professor está cadastrado
+            // abertura do arquivo professores.bin
             FILE* arquivoProfessores = fopen("dados/professor/professores.bin", "rb");
 
+            // Verifica se nao houve problema para abrir o arquivo
             if (arquivoProfessores != NULL) {
                 int professorEncontrado = 0;
                 Professor professor;
+                // Loop para ler cada professor no arquivo professores.bin
                 while (fread(&professor, sizeof(Professor), 1, arquivoProfessores)) {
+                    // Verifica se a matricula do professor e igual a matricula informada
                     if (strcmp(professor.matricula, turma.professor.matricula) == 0) {
+                        // caso seja igual a variavel professor encontrado receber 1 (true)
                         professorEncontrado = 1;
+                        // atribui o professor a turma
                         turma.professor = professor;
                         break;
                     }
                 }
+
+                // Fechamento do arquivo
                 fclose(arquivoProfessores);
 
+                // Caso professor nao seja encontrado a msg abaixo e impressa
                 if (!professorEncontrado) {
                     printf("Professor não encontrado!\n");
                     return;
                 }
+            // caso ocorra erro na abertura do arquivo imprime a msg abaixo
             } else {
                 printf("Não há professores cadastrados!\n");
                 return;
             }
 
+            // solicita a media da turma
             printf("Media da Turma: ");
             scanf("%f", &turma.media);
 
+            // salva a turma atualizada no arquivo turmas.bin
             fwrite(&turma, sizeof(Turma), 1, arquivo);
+            // fechamento do arquivo 
             fclose(arquivo);
-
+            // msg de sucesso
             printf("Turma atualizada com sucesso!\n");
             return;
         }
     }
 
+    // fechamento do arquivo
     fclose(arquivo);
+    // msg caso nao localize o arquivo
     printf("Turma não encontrada!\n");
 }
 
