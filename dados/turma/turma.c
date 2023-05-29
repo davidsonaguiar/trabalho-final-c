@@ -259,6 +259,7 @@ void atualizarTurma() {
 
 
 
+// Deletar turma
 void descadastrarTurma() {
     char codigo[10];
     Turma turma;
@@ -266,74 +267,66 @@ void descadastrarTurma() {
     int turmaEncontrada = 0;
 
     printf("--- DESCADASTRAR TURMA ---\n");
+
+    // Input solicitando o codigo da turma
     printf("Código da turma a ser descadastrada: ");
     scanf("%s", codigo);
 
+    // Abertura do arquivo turmas.bin
     arquivo = fopen("dados/turma/turmas.bin", "r+b");
+
+    // Caso ocorra erro na abertura do arquivo printa a msg abaixo
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo!\n");
         return;
     }
 
+    // Abertura do arquivo turmas_temp.bin
     FILE* arquivoTemporario = fopen("dados/turma/turmas_temp.bin", "w+b");
+
+    // Caso ocorra erro na abertura do arquivo printa a msg abaixo
     if (arquivoTemporario == NULL) {
         printf("Erro ao abrir o arquivo temporário!\n");
+        // fechamento do arquivo
         fclose(arquivo);
         return;
     }
 
+    // Percorre cada turma cadastrada no arquivo .bin
     while (fread(&turma, sizeof(Turma), 1, arquivo)) {
+        // Se o codigo informado for igual ao codigo da turma
         if (strcmp(turma.codigo, codigo) == 0) {
+            // A variavel turmaEncontrada recebe 1 (true)
             turmaEncontrada = 1;
         } else {
+            // Se o codigo nao for igual salva a turma no arquivo temporario
             fwrite(&turma, sizeof(Turma), 1, arquivoTemporario);
         }
     }
 
+    // fechamento dos arquivos turmas e temporario .bin
     fclose(arquivo);
     fclose(arquivoTemporario);
 
+    // Se turma for encontrada
     if (turmaEncontrada) {
+        // Excluir o arquivo turmas.bin
         remove("dados/turma/turmas.bin");
+        // Renomeia o arquivo turmas_temp.bin para turmas.bin
         rename("dados/turma/turmas_temp.bin", "dados/turma/dados/turma/turmas.bin");
+        // Imprime a msg de sucesso
         printf("Turma descadastrada com sucesso!\n");
+    // Se nao encontrar a turma
     } else {
+        // Remove o arquivo turmas_temp.bin
         remove("dados/turma/turmas_temp.bin");
+        // Imprime msg de nao encontrada
         printf("Turma não encontrada!\n");
     }
 }
 
 
-
-void calcularMediaTurmas() {
-    FILE* arquivoTurmas = fopen("dados/turma/turmas.bin", "rb");
-    if (arquivoTurmas == NULL) {
-        printf("Não há turmas cadastradas!\n");
-        return;
-    }
-
-    Turma turma;
-    float somaMedias = 0.0;
-    int numTurmas = 0;
-
-    printf("--- MÉDIA DAS TURMAS ---\n");
-
-    while (fread(&turma, sizeof(Turma), 1, arquivoTurmas)) {
-        somaMedias += turma.media;
-        numTurmas++;
-    }
-
-    fclose(arquivoTurmas);
-
-    if (numTurmas > 0) {
-        float mediaTurmas = somaMedias / numTurmas;
-        printf("Média de todas as turmas: %.2f\n", mediaTurmas);
-    } else {
-        printf("Não há turmas cadastradas!\n");
-    }
-}
-
-
+// Cadastrar aluno na turma
 void adicionarAluno() {
     char codigo[10], matricula[10];
     FILE* arquivoTurmas;
@@ -361,7 +354,6 @@ void adicionarAluno() {
     while (fread(&turma, sizeof(Turma), 1, arquivoTurmas)) {
         // Se o codigo for localizado turmaEncontrada sera true
         if (strcmp(turma.codigo, codigo) == 0) {
-
             turmaEncontrada = 1;
             break;
         }
@@ -463,79 +455,107 @@ void imprimirMedia() {
     int quantidadeTurmas = 0;
     float somatorioNotas = 0;
 
+    // Abertura do arquivo turmas.bin
     FILE* arquivoTurma = fopen("dados/turma/turmas.bin", "rb");
 
+    // Caso ocorra erro na abertura do arquivo
     if(arquivoTurma == NULL) {
-        printf("Erro ao abrir arquivo .bin");
+        // Imprime a msg abaixo
+        printf("Erro ao abrir arquivo turmas.bin");
+        // Fecha o arquivo turmas.bin
         fclose(arquivoTurma);
     }
 
+    // Percorre todas as turmas cadastrada no arquivo turmas.bin
     while(fread(&turma, sizeof(Turma), 1, arquivoTurma)) {
+        // incrementa +1 a quantidade de turma
         quantidadeTurmas++;
+        // adiciona o valor da media da turma a variavel somatorioNotas
         somatorioNotas += turma.media;
     }
 
     printf("=================================================\n");
     printf("Media das Turmas\n");
     printf("=================================================\n");
+    // Imprime a divisao do somatorio / quantidade de turmas
     printf("MEDIA: %.2f.\n", somatorioNotas / quantidadeTurmas);
     printf("-------------------------------------------------");
 
+    // Fechamento do arquivo 
     fclose(arquivoTurma);
 }
 
-void descadastrarAlunoTurma() {
-    FILE* arquivoTurmas = fopen("dados/turma/turmas.bin", "rb+");
-    FILE* arquivoAlunos = fopen("dados/aluno/alunos.bin", "rb+");
 
-    if (arquivoTurmas == NULL || arquivoAlunos == NULL) {
-        printf("Erro ao abrir os arquivos de turmas ou alunos!\n");
+// Remover aluno da turma
+void descadastrarAlunoTurma() {
+    Turma turma, turmaTemp;
+    int alunoEncontrado = 0;
+    char codigoTurma[10];
+    char matriculaAluno[10];
+
+    // Solicita codigo da turma
+    printf("Digite o código da turma: ");
+    scanf("%s", codigoTurma);
+    // Solicita matricula do aluno
+    printf("Digite a matrícula do aluno: ");
+    scanf("%s", matriculaAluno);
+
+    // Abertur dos arquivos turmas.bin e temporario.bin
+    FILE* arquivoTurmas = fopen("dados/turma/turmas.bin", "rb");
+    FILE* arquivoTemp = fopen("dados/turma/temporario.bin", "wb");
+
+    // Caso ocorra erro na abertura do arquivo imprime a msg abaixo
+    if (arquivoTurmas == NULL || arquivoTemp == NULL) {
+        printf("Erro ao abrir os arquivos de turmas ou temporário!\n");
         return;
     }
 
-    char matriculaAluno[10];
-    printf("Digite a matrícula do aluno a ser descadastrado: ");
-    scanf("%s", matriculaAluno);
-
-    Aluno aluno;
-    Turma turma;
-    int encontrado = 0;
-
+    // Percorre cada turma cadastrada no arquivo turmas.bin
     while (fread(&turma, sizeof(Turma), 1, arquivoTurmas)) {
-        // Verifica se o aluno está presente na turma
-        for (int i = 0; i < 40; i++) {
-            if (strcmp(turma.alunos[i].matricula, matriculaAluno) == 0) {
-                encontrado = 1;
-                // Remove o aluno da turma movendo os alunos subsequentes para frente
-                for (int j = i; j < 39; j++) {
-                    strcpy(turma.alunos[j].matricula, turma.alunos[j + 1].matricula);
-                    strcpy(turma.alunos[j].cpf, turma.alunos[j + 1].cpf);
-                    strcpy(turma.alunos[j].nome, turma.alunos[j + 1].nome);
-                    turma.alunos[j].endereco = turma.alunos[j + 1].endereco;
-                }
-                // Limpa os dados do último aluno no array
-                strcpy(turma.alunos[39].matricula, "");
-                strcpy(turma.alunos[39].cpf, "");
-                strcpy(turma.alunos[39].nome, "");
-                turma.alunos[39].endereco = (Endereco){ "", "", "", "", "" };
-                break;
-            }
-        }
+        // Se o codigo da turma for diferente ao codigo informado
+        if (strcmp(turma.codigo, codigoTurma) == 0) {
+            // Copiando os dados da turma para turma_temporaria
+            strcpy(turmaTemp.codigo, turma.codigo);
+            strcpy(turmaTemp.nome, turma.nome);
+            turmaTemp.numAlunos = 0;
+            turmaTemp.media = turma.media;
+            turmaTemp.professor = turma.professor;
 
-        // Se o aluno foi encontrado e removido da turma, atualiza a turma no arquivo
-        if (encontrado) {
-            long posicao = ftell(arquivoTurmas) - sizeof(Turma);
-            fseek(arquivoTurmas, posicao, SEEK_SET);
-            fwrite(&turma, sizeof(Turma), 1, arquivoTurmas);
-            printf("Aluno descadastrado da turma com sucesso!\n");
-            break;
+            // Percorre todos os aluno da turma
+            for (int i = 0; i < turma.numAlunos; i++) {
+                // Verifica se a matricula do aluno e diferente da matricula informada
+                if (strcmp(turma.alunos[i].matricula, matriculaAluno) != 0) {
+                    // Copiando os dados para a turmaTemp
+                    strcpy(turmaTemp.alunos[turmaTemp.numAlunos].nome, turma.alunos[i].nome);
+                    strcpy(turmaTemp.alunos[turmaTemp.numAlunos].cpf, turma.alunos[i].cpf);
+                    strcpy(turmaTemp.alunos[turmaTemp.numAlunos].matricula, turma.alunos[i].matricula);
+                    turmaTemp.alunos[turmaTemp.numAlunos].endereco = turma.alunos[i].endereco;
+                    turmaTemp.numAlunos++;
+                } else {
+                    alunoEncontrado = 1;
+                }
+            }
+            //Salvando a turmaTemp no arquivo .bin
+            fwrite(&turmaTemp, sizeof(Turma), 1, arquivoTemp);
+        } else {
+            //Salvando a turma no arquivo .bin
+            fwrite(&turma, sizeof(Turma), 1, arquivoTemp);
         }
     }
 
-    if (!encontrado) {
+    // Fechamento dos arquivos
+    fclose(arquivoTurmas);
+    fclose(arquivoTemp);
+
+    // Remove o arquivo turmas.bin
+    remove("dados/turma/turmas.bin");
+    // Renomea o arquivo temporario.bin para turmas.bin
+    rename("dados/turma/temporario.bin", "dados/turma/turmas.bin");
+
+
+    if (alunoEncontrado) {
+        printf("Aluno descadastrado da turma com sucesso!\n");
+    } else {
         printf("Aluno não encontrado na turma!\n");
     }
-
-    fclose(arquivoTurmas);
-    fclose(arquivoAlunos);
 }
