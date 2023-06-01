@@ -1,6 +1,6 @@
-#include <stdio.h>
-#include "./menus.h"
-
+#include <stdio.h> // Inclui a biblioteca de entrada/saída padrão
+#include "./menus.h"   // Inclui o arquivo de cabeçalho 'menus.h'
+// sistema de menu para turma.
 void menuTurma() {
 
     int opcao;
@@ -9,7 +9,7 @@ void menuTurma() {
         printf("\n+------------------------+\n");
         printf("| ===== MENU TURMA ===== |\n");
         printf("+------------------------+\n");
-
+// Menssagem do menu para turma.
         printf("1 - Cadastrar Turma\n");
         printf("2 - Mostrar Turmas\n");
         printf("3 - Atualizar Turma\n");
@@ -19,7 +19,7 @@ void menuTurma() {
         printf("7 - Mostrar media das turmas\n");
         printf("8 - Cadastrar Professor\n");
         printf("0 - Menu Principal\n\n");
-
+// Solicitando ao usário que escolha uma das opções
         printf("Escolha uma das opcoes acima: ");
         scanf("%d", &opcao);
 
@@ -27,31 +27,31 @@ void menuTurma() {
 
         switch (opcao) {
             case 1:
-                cadastrarTurma();
+                cadastrarTurma(); // Chamando a função cadastrar turma.
                 break;
             
             case 2:
-                imprimirTurmas();
+                imprimirTurmas(); // Chamando a função imrpimir turma.
                 break;
             
             case 3:
-                atualizarTurma();
+                atualizarTurma(); // Chamando a função atualizar.
                 break;
             
             case 4:
-                descadastrarTurma();
+                descadastrarTurma(); // Chamando a função descadastrar turma.
                 break;
             
             case 5:
-                adicionarAluno();
+                adicionarAluno(); // Chamando a função adcionar aluno.
                 break;
             
             case 6:
-                descadastrarAlunoTurma();
+                descadastrarAlunoTurma(); // Chamando a função descastrar aluno
                 break;
             
             case 7:
-                imprimirMedia();
+                imprimirMedia(); // Chamando a função imprimir média
                 break;
 
             case 8:
@@ -65,5 +65,5 @@ void menuTurma() {
             default:
                 break;
             }
-    } while(1);
+    } while(1); //loop para manter o menu em execução
 }
