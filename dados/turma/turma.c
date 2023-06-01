@@ -45,47 +45,8 @@ void cadastrarTurma() {
     scanf(" %[^\n]", turma.nome);
 
     // Input para o usuario informar a matricula do professor
-    printf("Professor:\n");
-    printf("Matrícula: ");
-    scanf("%s", turma.professor.matricula);
-
-    // Input para o usuario informar a matricula do professor
     printf("Media da turma: ");
     scanf("%f", &turma.media);
-
-    // Abertura do arquivo professores.bin para verificacao
-    arquivo = fopen("dados/professor/professores.bin", "rb");
-
-    // Verifica se nao houve problema para abrir o arquivo professores.bin
-    if (arquivo != NULL) {
-        int professorEncontrado = 0; //variavel para verificar se o professor foi encontrado
-        Professor professor;
-
-        // Loop para percorrer os professores cadastrados
-        // Verifica se a matricula existe            
-        while (fread(&professor, sizeof(Professor), 1, arquivo)) {
-            if (strcmp(professor.matricula, turma.professor.matricula) == 0) {
-                // Se a matricula for encontrada professor recebe 1(true)
-                professorEncontrado = 1;
-                // atribuido progessor a turma
-                turma.professor = professor;
-                // Quebrando o laco
-                break;
-            }
-        }
-        // Fechamento do arquivo
-        fclose(arquivo);
-
-        // Caso o arquivo nao seja localizado retorna a msg abaixo
-        if (!professorEncontrado) {
-            printf("Professor não encontrado!\n");
-            return;
-        }
-    } else {
-        // Caso o arquivo nao seja localizado retorna a msg abaixo
-        printf("Não há professores cadastrados!\n");
-        return;
-    }
 
     // Inicialmente o numero de alunos sera 0
     turma.numAlunos = 0;
@@ -153,10 +114,6 @@ void imprimirTurmas() {
                 printf("   ----------------------------------------------\n");
 
             }
-            printf("-------------------------------------------------\n");
-            printf("Média: %.2f\n", turma.media);
-            printf("-------------------------------------------------\n");
-            printf("\n");
         }
     }
     // Fechamento do arquivo
@@ -558,4 +515,83 @@ void descadastrarAlunoTurma() {
     } else {
         printf("Aluno não encontrado na turma!\n");
     }
+}
+
+
+void cadastrarProfessorTurma() {
+    // Abrindo os aquivos professor.bin e turmas.bin
+    FILE* arquivoTurma =fopen("dados/turma/turmas.bin","rb+");
+    FILE* arquivoProfessor =fopen("dados/professor/professores.bin","rb");
+
+    // Caso ocorra erro na abertura dos arquivos.bin
+    if(arquivoProfessor == NULL || arquivoTurma == NULL) {
+        printf("Erro ao abrir arquivos .bin!");
+        return;
+    }
+
+    Professor professor;
+    char matricula[10];
+    int professorEncontrado = 0;
+
+    // Solicitando a matricula do professor
+    printf("Informe a matricula do Professor: ");
+    scanf("%s", matricula);
+
+    // Loop para percorrer cada professor salvo no arquivo professores.bin
+    while(fread(&professor, sizeof(Professor), 1, arquivoProfessor)) {
+        // Verifica se a matricula do professor e igual a matricula informada
+        if(strcmp(matricula, professor.matricula) == 0) {
+            // se for igual atribui 1 (true) para professor encontrado
+            professorEncontrado = 1;
+            // para o loop
+            break;
+        }
+    }
+
+    // Caso nao encontre o professor 
+    if(!professorEncontrado ) {
+        // msg de erro
+        printf("Matricula informada nao consta no sistema!");
+        //fechar arquivos
+        fclose(arquivoProfessor);
+        fclose(arquivoTurma);
+        // encerrar a funcao
+        return;
+    }
+
+    Turma turma;
+    char codigo[10];
+    int turmaEncontrada = 0;
+
+    // Solicitando o codigo da turma
+    printf("Informe o codigo da turma: ");
+    scanf("%s", codigo);
+    
+    // Loop para percorrer todas as turmas do arquivo turmas.bin
+    while(fread(&turma, sizeof(Turma), 1, arquivoTurma)) {
+        // Se o codigo da turma for igual ao codigo informado
+        if(strcmp(turma.codigo, codigo) == 0) {
+            // turma recebe o professor localizado
+            turma.professor = professor;
+
+            fseek(arquivoTurma, -sizeof(Turma), SEEK_CUR);
+            fwrite(&turma, sizeof(Turma), 1, arquivoTurma);
+
+
+            turmaEncontrada = 1;
+        }
+    }
+
+    // Caso nao localize a turma
+    if(!turmaEncontrada) {
+        printf("Turma nao localizada!");
+        return;
+    }
+
+    // Msg de suceeso
+    printf("Professor cadastrado com sucesso!");
+
+    // Fechando os arquivos .bin
+    fclose(arquivoTurma);
+    fclose(arquivoProfessor);
 }
