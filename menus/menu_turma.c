@@ -16,8 +16,9 @@ void menuTurma() {
         printf("4 - Remover Turma\n");
         printf("5 - Adicionar Aluno\n");
         printf("6 - Remover Aluno da Turma\n");
-        printf("7 - Mostrar media das turmas\n");
-        printf("8 - Cadastrar Professor\n");
+        printf("7 - Cadastrar Professor\n");
+        printf("8 - Descadastrar Professor\n");
+        printf("9 - Mostrar media das turmas\n");
         printf("0 - Menu Principal\n\n");
 // Solicitando ao usário que escolha uma das opções
         printf("Escolha uma das opcoes acima: ");
@@ -49,15 +50,19 @@ void menuTurma() {
             case 6:
                 descadastrarAlunoTurma(); // Chamando a função descastrar aluno
                 break;
-            
+
             case 7:
+                cadastrarProfessorTurma();
+                break;
+                
+            case 8:
+                descadastrarProfessorTurma();
+                break;
+            
+            case 9:
                 imprimirMedia(); // Chamando a função imprimir média
                 break;
 
-            case 8:
-                cadastrarProfessorTurma();
-                break;
-            
             case 0:
                 return;
                 break;

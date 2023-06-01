@@ -595,3 +595,52 @@ void cadastrarProfessorTurma() {
     fclose(arquivoTurma);
     fclose(arquivoProfessor);
 }
+
+
+
+void descadastrarProfessorTurma() {
+    // Abrindo os aquivos professor.bin e turmas.bin
+    FILE* arquivoTurma =fopen("dados/turma/turmas.bin","rb+");
+
+    // Caso ocorra erro na abertura dos arquivos.bin
+    if(arquivoTurma == NULL) {
+        printf("Erro ao abrir arquivos .bin!");
+        return;
+    }
+
+    Turma turma;
+    char codigo[10];
+    int turmaEncontrada = 0;
+    Professor professor;
+
+    // Solicitando o codigo da turma
+    printf("Informe o codigo da turma: ");
+    scanf("%s", codigo);
+    
+    // Loop para percorrer todas as turmas do arquivo turmas.bin
+    while(fread(&turma, sizeof(Turma), 1, arquivoTurma)) {
+        // Se o codigo da turma for igual ao codigo informado
+        if(strcmp(turma.codigo, codigo) == 0) {
+            // turma recebe o professor localizado
+            turma.professor = professor;
+
+            fseek(arquivoTurma, -sizeof(Turma), SEEK_CUR);
+            fwrite(&turma, sizeof(Turma), 1, arquivoTurma);
+
+
+            turmaEncontrada = 1;
+        }
+    }
+
+    // Caso nao localize a turma
+    if(!turmaEncontrada) {
+        printf("Turma nao localizada!");
+        return;
+    }
+
+    // Msg de suceeso
+    printf("Professor descadastrado com sucesso!");
+
+    // Fechando os arquivos .bin
+    fclose(arquivoTurma);
+}

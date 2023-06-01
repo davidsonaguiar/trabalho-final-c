@@ -11,6 +11,7 @@ void descadastrarTurma();
 void adicionarAluno();
 void descadastrarAlunoTurma();
 void cadastrarProfessorTurma();
+void descadastrarProfessorTurma();
 void imprimirMedia();
 
 #endif
