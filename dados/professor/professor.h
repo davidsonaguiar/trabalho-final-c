@@ -9,6 +9,6 @@ void imprimirProfessores();
 void atualizarProfessor();
 void descadastrarProfessor();
 void imprimirProfessoresSemTurma();
-
+void imprimirProfessor();
 
 #endif

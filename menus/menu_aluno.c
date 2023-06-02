@@ -13,6 +13,7 @@ void menuAluno() {
         printf("2 - Mostrar Alunos\n");     // Opção para mostrar os alunos cadastrados
         printf("3 - Atualizar Aluno\n");    // Opção para atualizar os dados de um aluno
         printf("4 - Remover Aluno\n");      // Opção para remover um aluno
+        printf("5 - Mostrar Aluno\n");      // Opção para remover um aluno
         printf("0 - Menu Principal\n\n");  // Opção para retornar ao menu principal
 
         printf("Escolha uma das opcoes acima: ");   // Solicita ao usuário que escolha uma opção
@@ -35,6 +36,10 @@ void menuAluno() {
             
             case 4:
                 descadastrarAluno(); // Chama a função para remover um aluno
+                break;
+
+            case 5:
+                imprimirAluno(); // Chama a função para imprimir um aluno especifico
                 break;
             
             case 0:

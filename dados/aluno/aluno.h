@@ -8,5 +8,6 @@ void cadastrarAluno();          //declaração da função cadastrarAluno
 void imprimirAlunos();          //declaração da função imprimirAlunos
 void atualizarAluno();          //declaração da função atualizarAluno
 void descadastrarAluno();       //declaração da função descadastrarAluno
+void imprimirAluno();
 
 #endif

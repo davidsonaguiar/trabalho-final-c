@@ -15,6 +15,7 @@ void menuProfessor() {
         printf("3 - Mostrar Professores sem Turma\n");
         printf("4 - Atualizar Professor\n");
         printf("5 - Remover Professor\n");
+        printf("6 - Imprimir Professor\n");
         printf("0 - Menu Principal\n\n");
 // Solicitando ao usário que escolha uma das opções.
         printf("Escolha uma das opcoes acima:");
@@ -45,6 +46,10 @@ void menuProfessor() {
             
             case 5:
                 descadastrarProfessor(); // Chamando função de descadastro de professores.
+                break;
+            
+            case 6:
+                imprimirProfessor(); // Chamando função de descadastro de professores.
                 break;
             
             case 0:

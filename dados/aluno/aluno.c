@@ -272,3 +272,40 @@ void descadastrarAluno() {
         printf("Aluno não encontrado!\n");
     }
 }
+
+void imprimirAluno() {
+    FILE* arquivoAlunos = fopen("dados/aluno/alunos.bin", "rb");
+    Aluno aluno;
+    char matricula[10];
+    
+    // Caso ocorra erro ao abrir o arquivo
+    if(arquivoAlunos == NULL) {
+        printf("Erro ao abrir o arquivo .bin!\n");
+        return;
+    }
+
+    // Solictar a matricula do aluno
+    printf("Informe a matricula do aluno.");
+    scanf("%s", matricula);
+
+    // Loop para percorrer cada aluno do arquivo alunos.bin
+    while(fread(&aluno, sizeof(Aluno), 1, arquivoAlunos)) {
+        // Verifica se a matricula do aluno e igual a matricula informada.
+        if(strcmp(matricula, aluno.matricula) == 0) {
+            printf("Matrícula: %s\n", aluno.matricula);
+            printf("CPF: %s\n", aluno.cpf);
+            printf("Nome: %s\n", aluno.nome);
+            printf("Endereço:\n");
+            printf("Logradouro: %s\n", aluno.endereco.logradouro);
+            printf("Bairro: %s\n", aluno.endereco.bairro);
+            printf("Cidade: %s\n", aluno.endereco.cidade);
+            printf("Estado: %s\n", aluno.endereco.estado);
+            printf("Número: %s\n", aluno.endereco.numero);
+            printf("------------\n");
+
+            break;
+        }
+    }
+
+    fclose(arquivoAlunos);
+}

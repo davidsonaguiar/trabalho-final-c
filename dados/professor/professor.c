@@ -296,3 +296,40 @@ void imprimirProfessoresSemTurma() {
     fclose(arquivoTurmas);
     fclose(arquivoProfessores);
 }
+
+void imprimirProfessor() {
+    FILE* arquivoProfessor = fopen("dados/professor/professores.bin", "rb");
+    Aluno professor;
+    char matricula[10];
+    
+    // Caso ocorra erro ao abrir o arquivo
+    if(arquivoProfessor == NULL) {
+        printf("Erro ao abrir o arquivo .bin!\n");
+        return;
+    }
+
+    // Solictar a matricula do aluno
+    printf("Informe a matricula do Professor: ");
+    scanf("%s", matricula);
+
+    // Loop para percorrer cada aluno do arquivo alunos.bin
+    while(fread(&professor, sizeof(Professor), 1, arquivoProfessor)) {
+        // Verifica se a matricula do aluno e igual a matricula informada.
+        if(strcmp(matricula, professor.matricula) == 0) {
+            printf("Matrícula: %s\n", professor.matricula);
+            printf("CPF: %s\n", professor.cpf);
+            printf("Nome: %s\n", professor.nome);
+            printf("Endereço:\n");
+            printf("Logradouro: %s\n", professor.endereco.logradouro);
+            printf("Bairro: %s\n", professor.endereco.bairro);
+            printf("Cidade: %s\n", professor.endereco.cidade);
+            printf("Estado: %s\n", professor.endereco.estado);
+            printf("Número: %s\n", professor.endereco.numero);
+            printf("------------\n");
+
+            break;
+        }
+    }
+
+    fclose(arquivoProfessor);
+}
